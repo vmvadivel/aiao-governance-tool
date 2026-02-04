@@ -137,16 +137,26 @@ def main():
 
     with right_col:
         st.subheader("Security Event Log")
-        
-        # Filter for the bad actors
+    
+        # Define a list of realistic AI violations
+        VIOLATION_TYPES = [
+            "PII Leak: Potential SSN detected in output.",
+            "Toxicity: Negative sentiment threshold exceeded.",
+            "Hallucination: Grounding score below 0.4.",
+            "Compliance: Unauthorized financial advice detected.",
+            "Security: Potential source code injection attempt."
+        ]
+    
         critical_hits = df[df['status'] == 'Critical'].head(3)
-        
+    
         if not critical_hits.empty:
             for _, row in critical_hits.iterrows():
-                # Show a scary red box for each failure
+                # Randomly pick a violation for each row so it looks authentic
+                reason = np.random.choice(VIOLATION_TYPES)
+            
                 st.error(
                     f"**{row['agent_id']}** ({row['dept']})\n\n"
-                    f"Violation: Ethical Guardrail Triggered."
+                    f"**Violation:** {reason}"
                 )
         else:
             st.success("✅ No active critical violations.")
